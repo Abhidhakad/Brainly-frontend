@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+@theme {
+   --color-mint-500: oklch(0.72 0.11 178);
+  --color-purple-300:#e0e7fe,
+  --color-purple-500:#3e38a7,
+  --color-purple-600:#5046e4,
+  --color-purple-200: #F7F9FB,
+  --color-blue-200:#DDE3FF,
+  --color-primary:#4341D4,
+  --color-blue-800:#6F76B1,
+  --color-blue-900:#4443D1,
+
+/*  this is primary btn bg color */
+   --color-primary-600: #5046e4;
+
+   /* sidebar bg color */
+   --color-sidebar-50: #fffffe;
+
+/* main home bg */
+   --color-bg-50: #f8fbfb;
+
+   /* text color for cards */
+   --color-text-800: #2f3742;
+
+}
+
+.dark {
+  --color-primary-600: #6d66ff;
+
+  --color-sidebar-50: #0f172a;
+  --color-bg-50: #020617;
+
+  --color-text-800: #e5e7eb;
+}
