@@ -1,7 +1,7 @@
 
 import { useState } from "react";
-import { ContentSchema } from "../schemas/ContentSchema";
-import type { ContentFormData } from "../schemas/ContentSchema";
+import { ContentSchema } from "../schemas/contentSchema";
+import type { ContentFormData } from "../schemas/contentSchema";
 
 export const useContentForm = () => {
     const [formData, setFormData] = useState<ContentFormData>({
@@ -12,7 +12,7 @@ export const useContentForm = () => {
     });
 
     const [errors, setErrors] = useState<Record<string, string>>({});
-    const [isDisabled, setIsDisabled] = useState(true);
+    const [isDisabled,] = useState(true);
 
     const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();

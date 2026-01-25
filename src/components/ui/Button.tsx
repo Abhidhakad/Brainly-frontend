@@ -18,8 +18,8 @@ const sizeStyles = {
 };
 
 const varientStyles = {
-  primary: "bg-blue-600 text-white hover:bg-blue-700 transition-all",
-  secondry: "bg-blue-200 text-blue-800 hover:bg-blue-300 transition-all",
+  primary: "btn-primary",
+  secondry: "bg-secondary-500 text-blue-800 hover:bg-secondary-600 transition-all",
 };
 
 const Button = (props: IButton) => {

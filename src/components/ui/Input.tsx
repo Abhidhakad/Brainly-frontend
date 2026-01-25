@@ -12,7 +12,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
       <input
         type={type}
         ref={ref}
-        className={`w-full max-w-sm min-h-8 rounded-md border border-gray-300 shadow-sm text-neutral-900 placeholder-neutral-500 read-only:bg-neutral-100 read-only:text-neutral-500 focus:border-neutral-500 focus:outline-none focus:ring-neutral-500 sm:text-sm ${className}`}
+        className={` w-full rounded-xl border border-slate-300
+      bg-transparent px-4 py-3 text-slate-900
+      focus:border-blue-500 focus:ring-2 focus:ring-blue-500
+      outline-none transition
+      dark:border-slate-700 dark:text-white sm:text-sm
+          ${className}`}
         {...rest}
       />
     );

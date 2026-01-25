@@ -1,29 +1,33 @@
 import Sidebar from "./Sidebar";
-import TopHeader from "./TopHeader"
-// import Cards from "./Cards";
-
+import TopHeader from "./TopHeader";
+import Cards from "./Cards";
 
 const Dashboard = () => {
   return (
-   <>
-  <div className="h-full w-full bg-[#F7F9FB]">
-     <Sidebar />
+    <div className="min-h-screen bg-bg text-text transition-colors duration-300 overflow-x-hidden">
 
-     <TopHeader />
+      {/* Sidebar */}
+      <Sidebar />
 
-     {/* <Cards /> */}
+      {/* Main Content Area */}
+      <div className="md:pl-64 flex flex-col min-h-screen">
+        <TopHeader />
 
+        <main className="mx-auto px-8 sm:py-6 pt-28">
+          <div className="
+  flex flex-wrap
+  gap-6
+  justify-center md:justify-start
+  max-w-7xl mx-auto
+">
+            <Cards />
+          </div>
 
-     {/* <Card
-  title="How to Build a Second Brain"
-  tags={["productivity", "learning"]}
-  addedDate="09/03/2024"
-/> */}
+        </main>
+      </div>
 
-
-  </div>
-   </>
-  )
-}
+    </div>
+  );
+};
 
 export default Dashboard;

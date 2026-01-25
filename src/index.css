@@ -1,35 +1,131 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
-   --color-mint-500: oklch(0.72 0.11 178);
-  --color-purple-300:#e0e7fe,
-  --color-purple-500:#3e38a7,
-  --color-purple-600:#5046e4,
-  --color-purple-200: #F7F9FB,
-  --color-blue-200:#DDE3FF,
-  --color-primary:#4341D4,
-  --color-blue-800:#6F76B1,
-  --color-blue-900:#4443D1,
 
-/*  this is primary btn bg color */
-   --color-primary-600: #5046e4;
 
-   /* sidebar bg color */
-   --color-sidebar-50: #fffffe;
 
-/* main home bg */
-   --color-bg-50: #f8fbfb;
+  /* primary button */
+  --color-primary-600: #4F46E5;
+  --color-primary-text: #FFFFFF;
 
-   /* text color for cards */
-   --color-text-800: #2f3742;
+
+  /* secondry btn color */
+  --color-secondary-500: #B5C4FD;
+  --color-secondary-text: #2E36D1;
+
+  /* sidebar bg */
+  --color-sidebar-50: #FFFFFF;
+
+  /* sidebar icon/text */
+  --color-sidebar-text: #475569;
+  --color-sidebar-hover-bg: #f1f5fA;
+  /* ---------------- */
+  /* background color for the main content area */
+  --color-bg-main: #FFFFFF;
+
+  /* main home bg */
+  --color-bg: #FAFAFA;
+
+  /* text color */
+  --color-text: #101827;
+
+  /* ------------ */
+
+  /* card bg */
+  --color-card: #FFFFFF;
+
+  /* card border */
+  --color-border: #E5E7EB;
+
+  /* main text */
+  --color-text: #0F172A;
+
+  /* muted text */
+  --color-text-muted: #64748B;
 
 }
 
 .dark {
-  --color-primary-600: #6d66ff;
 
-  --color-sidebar-50: #0f172a;
-  --color-bg-50: #020617;
+  /* primary btn  */
+  --color-primary-600: #6366F1;
+  --color-primary-text: #FFFFFF;
 
-  --color-text-800: #e5e7eb;
+
+  /* secondry btn */
+  --color-secondary-500: #B5C4FD;
+  --color-secondary-text: #2E36D1;
+
+  /* sidebar  */
+  --color-sidebar-50: #0F172A;
+  --color-sidebar-text: #CBD5F5;
+
+  --color-sidebar-hover-bg: #1E293B;
+
+  --color-bg: ##0F172A;
+  --color-card: #020617;
+
+  --color-border: #1E293B;
+
+  --color-text: #E5E7EB;
+  --color-text-muted: #94A3B8;
+
+  --color-tag-bg: #1E293B;
+  --color-tag-text: #A5B4FC;
+
+  /* -------------------------------- */
+  --color-bg: #020617;
+
+  --color-text: #e5e7eb;
+
+  /* sidebar bg */
+  --color-sidebarbg-50: #0f172a;
+}
+
+
+@layer base {
+  body {
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    transition: background-color 300ms, color 300ms;
+  }
+}
+
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-2 sm:px-4 py-2 rounded-md font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
+
+    background-color: var(--color-primary-600);
+    color: var(--color-primary-text);
+    border: none;
+    cursor: pointer;
+    /* transition: background-color 300ms; */
+
+    &:hover {
+      /* background-color: var(--color-primary-600); */
+      filter: brightness(1.1);
+    }
+  }
+}
+
+
+@layer components {
+  .btn-secondry {
+    @apply inline-flex items-center justify-center gap-2 px-2 sm:px-4 py-2 rounded-md font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2;
+
+    background-color: var(--color-secondary-500);
+    color: var(--color-secondary-text);
+    /* color: #FFFFFF; */
+    border: none;
+    cursor: pointer;
+    /* transition: background-color 300ms; */
+
+    &:hover {
+      /* background-color: var(--color-primary-600); */
+      filter: brightness(1.1);
+    }
+  }
 }

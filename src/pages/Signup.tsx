@@ -1,114 +1,112 @@
-import { useState } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
-import { SignupSchema } from "../schemas/SignupSchema";
-import { apiConnector } from "../helpers/apiConnetor";
-import { AxiosError } from "axios";
+import { signupSchema } from "../schemas/authSchema";
+import { useAuthStore } from "../store/useAuthStore";
 
-type AuthFormData = z.infer<typeof SignupSchema>;
-const Signup = () => {
-  const [formData, setFormData] = useState<AuthFormData>({
-    username: "",
-    password: "",
-  });
-  const [errors, setErrors] = useState<Partial<AuthFormData>>({});
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [disableSubmit, setDisableSubmit] = useState(true);
+type AuthFormData = z.infer<typeof signupSchema>;
 
+const Login = () => {
   const navigate = useNavigate();
+  const login = useAuthStore((state) => state.login);
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const isLoading = useAuthStore((state) => state.isLoading);
 
-  const changeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    const updatedData = { ...formData, [name]: value };
-    setFormData(updatedData);
-
-    const result = SignupSchema.safeParse(updatedData);
-    if (!result.success) {
-      const fieldErrors: Partial<AuthFormData> = {};
-      result.error.errors.forEach((err) => {
-        const path = err.path[0] as keyof AuthFormData;
-        fieldErrors[path] = err.message;
-      });
-      setErrors(fieldErrors);
-    } else {
-      setErrors({});
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/", { replace: true });
     }
+  }, [isAuthenticated, navigate]);
 
-    const hasEmptyFields = Object.values(updatedData).some((val) => val.trim() === "");
-    setDisableSubmit(hasEmptyFields || !result.success);
-  };
 
-  const formHandler = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
 
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting},
+  } = useForm<AuthFormData>({
+    resolver: zodResolver(signupSchema),
+  });
+
+  
+  const onSubmit = async (data: AuthFormData) => {
     try {
-        await apiConnector({
-        method: "post",
-        url: `${import.meta.env.VITE_API_URL}/signup`,
-        bodyData: formData,
-        withCredentials: true
-      });
-      toast.success("Signed up successfully!");
+      await login(data.username,data.password,"signup");
+      toast.success("Logged in successfully!");
       navigate("/");
     } catch (error) {
-      const err = error as AxiosError<{ message: string }>;
-      console.error("Signup failed:", error);
-      toast.error(err?.response?.data?.message||"Signup failed. Please try again.");
-    } finally {
-      setIsSubmitting(false);
+      toast.error(
+      error instanceof Error
+        ? error.message
+        : "Login failed. Please try again."
+    );
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-blue-200 px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
-        <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">Signup</h2>
-        <form onSubmit={formHandler} className="flex flex-col gap-4">
+        <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">
+          Sign-up
+        </h2>
+
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col gap-4"
+        >
+          {/* Username */}
           <Input
             type="text"
-            name="username"
-            value={formData.username}
-            onChange={changeHandler}
             placeholder="Enter Username"
             autoComplete="username"
-            className="text-center"
-            required
+            {...register("username")}
           />
-          {errors.username && <p className="text-red-500 text-sm">{errors.username}</p>}
+          {errors.username && (
+            <p className="text-red-500 text-sm">
+              {errors.username.message}
+            </p>
+          )}
 
+          {/* Password */}
           <Input
             type="password"
-            name="password"
-            value={formData.password}
-            onChange={changeHandler}
             placeholder="Enter Password"
-            autoComplete="new-password"
-            className="text-center"
-            required
+            autoComplete="current-password"
+            {...register("password")}
           />
-          {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+          {errors.password && (
+            <p className="text-red-500 text-sm">
+              {errors.password.message}
+            </p>
+          )}
 
           <Button
-            title={isSubmitting ? "Registering..." : "Register"}
+            title={isSubmitting || isLoading ? "Signing in..." : "Sign In"}
             size="md"
             varient="primary"
-            disabled={disableSubmit || isSubmitting}
+            disabled={isSubmitting || isLoading}
           />
         </form>
 
         <p className="text-center text-sm mt-4">
-          Already have an account?{" "}
-          <span className="text-blue-600 underline hover:text-blue-800">
-            <a href="/login">Login</a>
-          </span>
+          already have account?{" "}
+          <a
+            href="/login"
+            className="text-blue-600 underline hover:text-blue-800"
+          >
+            Login
+          </a>
         </p>
       </div>
     </div>
   );
 };
 
-export default Signup;
+export default Login;
