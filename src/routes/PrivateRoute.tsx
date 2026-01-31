@@ -1,12 +1,21 @@
-// src/routes/ProtectedRoute.jsx
-import { Navigate, Outlet } from "react-router-dom";
-// import { useAuth } from "../context/AuthContext";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { useAuthStore } from "../store/useAuthStore";
 
 const PrivateRoute = () => {
-  // const { user } = useAuth();
-  const user = true;
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+  const location = useLocation();
 
-  return user ? <Outlet /> : <Navigate to="/login" replace />;
+  if (!isAuthenticated) {
+    return (
+      <Navigate
+        to="/login"
+        replace
+        state={{ from: location.pathname }}
+      />
+    );
+  }
+
+  return <Outlet />;
 };
 
 export default PrivateRoute;

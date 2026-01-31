@@ -15,18 +15,10 @@ export default function ThemeToggle() {
     <button
       onClick={toggleTheme}
       aria-label="Toggle theme"
-      className="
-        flex items-center justify-center
-        w-10 h-10 rounded-md
-        bg-bg
-        text-text
-        hover:opacity-80
-        border border-transparent
-        hover:border-gray-400
-        transition-all
-      "
-    >
-      {/* ICON (simple, no library) */}
+      className="flex items-center justify-center w-10 h-10 rounded-md
+        bg-bg text-text hover:opacity-80 border border-transparent hover:border-gray-400
+        transition-all">
+      {/* Icons */}
       {theme === "dark" ? <Sun/> : <Moon className="text-gray-800" /> }
     </button>
   );

@@ -9,9 +9,9 @@ import { CrossIcon } from "../icons/CrossIcon";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import { AxiosError } from "axios";
+import { useContentStore } from "../store/useContentStore";
 
-interface IProps {
+export interface IProps {
   open: boolean;
   onClose: () => void;
 }
@@ -19,13 +19,15 @@ interface IProps {
 const CreateContent = ({ open, onClose }: IProps) => {
   const [tags, setTags] = useState<string[]>([]);
   const navigate = useNavigate();
+  const createContent = useContentStore((state) => state.createContent);
+  const isLoading = useContentStore((state) => state.isLoading);
 
   const {
     register,
     handleSubmit,
     setValue,
     reset,
-    formState: { errors, isValid,isSubmitting },
+    formState: { errors, isValid, isSubmitting },
   } = useForm<ContentFormData>({
     resolver: zodResolver(ContentSchema),
     mode: "onChange",
@@ -38,13 +40,26 @@ const CreateContent = ({ open, onClose }: IProps) => {
   });
 
   const onSubmit = async (data: ContentFormData) => {
-   
+
     try {
-      console.log(data);
-      navigate("/");
+      await createContent(data);
+      toast.success("Content created successfully", {
+        position: "top-center",
+      });
+      navigate("/", { replace: true });
+      reset();
+      setTags([]);
+      onClose()
     } catch (error) {
-      const err = error as AxiosError<{ message: string }>;
-      toast.error(err?.response?.data?.message || "Server error");
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Something,went";
+      toast.error(message, {
+        position: "top-center",
+      }
+      );
+      reset();
     }
   };
 
@@ -57,7 +72,7 @@ const CreateContent = ({ open, onClose }: IProps) => {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center px-4 bg-black/40 backdrop-blur-md">
-      <div className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white dark:bg-slate-900 shadow-2xl p-6 md:p-10 transition-all">
+      <div className="relative w-full max-w-5xl max-h-[90vh] overflow-y-auto rounded-2xl bg-white dark:bg-slate-900 shadow-2xl p-4 md:p-10 transition-all">
 
         {/* Close Button */}
         <button
@@ -72,7 +87,7 @@ const CreateContent = ({ open, onClose }: IProps) => {
         </button>
 
         {/* Heading */}
-        <h2 className="text-2xl md:text-3xl font-bold text-center text-blue-600 dark:text-blue-400 mb-8">
+        <h2 className="text-2xl md:text-3xl font-bold text-center text-blue-600 dark:text-blue-400 mb-6">
           Create New Content
         </h2>
 
@@ -89,10 +104,10 @@ const CreateContent = ({ open, onClose }: IProps) => {
               <label htmlFor="title" className="font-medium text-slate-700 dark:text-slate-200">
                 Title *
               </label>
-             <Input id="title" type={"text"}
-             placeholder="Add Title"
-             {...register("title")}
-             />
+              <Input id="title" type={"text"}
+                placeholder="Add Title"
+                {...register("title")}
+              />
               {errors.title && (
                 <p className="text-red-500 text-sm">{errors.title.message}</p>
               )}
@@ -104,7 +119,7 @@ const CreateContent = ({ open, onClose }: IProps) => {
                 Link *
               </label>
               <Input id="link"
-              className=""
+                className=""
                 placeholder="Add Link"
                 {...register("link")}
               />
@@ -149,7 +164,7 @@ const CreateContent = ({ open, onClose }: IProps) => {
                   : "bg-blue-600 hover:bg-blue-700"}
               `}
             >
-              {isSubmitting ? "Saving..." : "Create Content"}
+              {isSubmitting || isLoading ? "Saving..." : "Create Content"}
             </button>
           </form>
 

@@ -1,115 +1,125 @@
 import { create } from "zustand";
-import { fetchContentApi, createContentApi, type ContentResponse } from "../api/contentApi";
+import {
+    fetchContentApi,
+    createContentApi,
+    updateContentApi,
+    deleteContentApi,
+    makeContentVisibilityApi,
+    type ContentResponse,
+} from "../api/contentApi";
+
+
+export interface CreateContentInput {
+  title: string;
+  link: string;
+  description: string;
+  tags: string[]; 
+}
+
 
 interface ContentState {
     contents: ContentResponse[];
     isLoading: boolean;
-    error: string | null;
 
     fetchContent: () => Promise<void>;
-    createContent: (
-        data: Omit<ContentResponse, "_id" | "createdAt">
-    ) => Promise<void>;
+    createContent: (data: CreateContentInput) => Promise<void>;
+
     updateContent: (
         id: string,
-        data: Partial<ContentResponse>
+        data: Partial<Omit<ContentResponse, "_id" | "createdAt" >>
     ) => Promise<void>;
-    deleteContent: (id: string) => Promise<void>;
 
-    clearError: () => void;
+    chnageContentVisibility: (id: string, isPublic: boolean) => Promise<void>;
+
+    deleteContent: (id: string) => Promise<void>;
 }
 
 export const useContentStore = create<ContentState>((set) => ({
     contents: [],
     isLoading: false,
-    error: null,
 
     fetchContent: async () => {
-        set({ isLoading: true, error: null });
+        set({ isLoading: true });
         try {
             const data = await fetchContentApi();
-            set({ contents: data });
-        } catch (err: unknown) {
-            let message = "Failed to fetch content";
-            if (err instanceof Error) {
-                message = err.message;
-            }
-            set({
-                error: message,
-            });
-            throw err;
-        } finally {
+            set({ contents: data, isLoading: false });
+        } catch (error) {
             set({ isLoading: false });
+            throw error;
         }
     },
 
     createContent: async (data) => {
-        set({ isLoading: true, error: null });
+        set({ isLoading: true });
         try {
-            
-            const newContent = await createContentApi(data.title, data.link, data.description, data.tags)
+            const newContent = await createContentApi(
+                data.title,
+                data.link,
+                data.description,
+                data.tags
+            );
 
             set((state) => ({
                 contents: [newContent, ...state.contents],
+                isLoading: false,
             }));
-
-        } catch (err: unknown) {
-
-            let message = "Failed to create content";
-            if (err instanceof Error) {
-                message = err.message;
-            }
-            set({
-                error: message,
-            });
-            throw err;
-        } finally {
+        } catch (error) {
             set({ isLoading: false });
+            throw error;
         }
     },
 
     updateContent: async (id, data) => {
-        set({ isLoading: true, error: null });
+        set({ isLoading: true });
         try {
+            const updated = await updateContentApi(id, data);
+
             set((state) => ({
                 contents: state.contents.map((item) =>
-                    item._id === id ? { ...item, ...data } : item
+                    item._id === id ? updated : item
                 ),
+                isLoading: false,
             }));
-        } catch (err: unknown) {
-
-            let message = "Failed to update content";
-            if (err instanceof Error) {
-                message = err.message;
-            }
-            set({
-                error: message,
-            });
-            throw err;
-        } finally {
+        } catch (error) {
             set({ isLoading: false });
+            throw error;
         }
     },
+
+    chnageContentVisibility: async (id: string, isPublic: boolean) => {
+
+        set({ isLoading: true });
+
+        try {
+
+            await makeContentVisibilityApi(id, isPublic);
+
+
+            set((state) => ({
+                contents: state.contents.map((item) =>
+                    item._id === id ? { ...item, public: isPublic } : item
+                ),
+                isLoading: false,
+            }));
+        } catch (error) {
+            set({ isLoading: false });
+            throw error;
+        }
+    },
+
 
     deleteContent: async (id) => {
-        set({ isLoading: true, error: null });
+        set({ isLoading: true });
         try {
+            await deleteContentApi(id);
+
             set((state) => ({
                 contents: state.contents.filter((item) => item._id !== id),
+                isLoading: false,
             }));
-        } catch (err: unknown) {
-            let message = "Failed to delete content";
-            if (err instanceof Error) {
-                message = err.message;
-            }
-            set({
-                error: message,
-            });
-            throw err;
-        } finally {
+        } catch (error) {
             set({ isLoading: false });
+            throw error;
         }
     },
-
-    clearError: () => set({ error: null }),
 }));

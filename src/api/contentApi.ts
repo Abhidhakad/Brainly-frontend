@@ -1,38 +1,60 @@
 import { apiClient } from "./apiClient";
+import { handleApiError } from "../utils/handleApiError";
+
+export interface Tag {
+  _id:string;
+  tagName:string;
+}
 
 export interface ContentResponse {
   _id: string;
   title: string;
   link: string;
   description: string;
-  tags: string[];
+  tags: Tag[];
+  type:string;
   public?: boolean;
   createdAt: string;
 }
 
-/* FETCH ALl CONTENT */
+interface AllContentResponse {
+  data: ContentResponse[];
+}
+
+/* Fetch all content */
 export const fetchContentApi = async (): Promise<ContentResponse[]> => {
-  const res = await apiClient.get("/content");
-  return res.data;
+  try {
+    const res = await apiClient.get<AllContentResponse>("/content");
+    return res.data.data; 
+  } catch (error) {
+    handleApiError(error, "Failed to fetch content");
+    throw error;
+  }
 };
 
-/* CREATE CONTENT */
+
+/* Create content */
 export const createContentApi = async (
   title: string,
   link: string,
   description: string,
   tags: string[]
 ): Promise<ContentResponse> => {
-  const res = await apiClient.post("/content", {
-    title,
-    link,
-    description,
-    tags,
-  });
-  return res.data;
+  try {
+    const res = await apiClient.post("/content", {
+      title,
+      link,
+      description,
+      tags,
+    });
+    return res.data.data;
+  } catch (error) {
+    handleApiError(error, "failed to create content");
+    throw error;
+  }
 };
 
-/* UPDATE CONTENT */
+/* Update content */
 export const updateContentApi = async (
   id: string,
   data: Partial<Omit<ContentResponse, "_id" | "createdAt">>
@@ -41,7 +63,29 @@ export const updateContentApi = async (
   return res.data;
 };
 
-/* DELETE CONTENT*/
+
+// Chnage content visibility
+export const makeContentVisibilityApi = async (
+  id: string,
+  isPublic: boolean
+): Promise<void> => {
+  try {
+    await apiClient.patch(`/content/${id}`, {
+      public: isPublic,
+    });
+  } catch (error) {
+    handleApiError(error, "failed to update content visibility");
+    throw error;
+  }
+};
+
+
+/* Delete content*/
 export const deleteContentApi = async (id: string): Promise<void> => {
-  await apiClient.delete(`/content/${id}`);
+  try {
+    await apiClient.delete(`/content/${id}`);
+  } catch (error) {
+    handleApiError(error, "failed to delete content");
+    throw error;
+  }
 };

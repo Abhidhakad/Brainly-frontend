@@ -1,11 +1,9 @@
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { toast } from "react-hot-toast";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-
-
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import { loginSchema } from "../schemas/authSchema";
@@ -25,36 +23,55 @@ const Login = () => {
     }
   }, [isAuthenticated, navigate]);
 
-
-
   const {
     register,
     handleSubmit,
-    formState: { errors, isSubmitting},
+    reset,
+    formState: { errors, isSubmitting },
   } = useForm<AuthFormData>({
     resolver: zodResolver(loginSchema),
   });
 
-  
   const onSubmit = async (data: AuthFormData) => {
     try {
-      await login(data.username,data.password,"login");
-      toast.success("Logged in successfully!");
-      navigate("/");
-    } catch (error) {
-       toast.error(
-      error instanceof Error
-        ? error.message
-        : "Login failed. Please try again."
-    );
+      await login(data.username, data.password, "login");
+
+      toast.success("Logged in successfully!", {
+        position: "top-center",
+      });
+
+      navigate("/", { replace: true });
+    } catch (error: unknown) {
+      const message =
+        error instanceof Error
+          ? error.message
+          : "Login failed. Please try again.";
+
+      toast.error(message, {
+        position: "top-center",
+      });
+
+      reset({
+        username: "",
+        password: "",
+      });
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-100 to-blue-200 px-4">
-      <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
-        <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">
-          Login
+    <div className="min-h-screen flex items-center justify-center px-4
+      bg-gradient-to-br from-blue-100 to-blue-200
+      dark:from-gray-900 dark:to-gray-800"
+    >
+      <div className="w-full max-w-md rounded-2xl p-8
+        bg-white dark:bg-gray-900
+        shadow-xl dark:shadow-black/40
+        border border-gray-200 dark:border-gray-700"
+      >
+        <h2 className="text-3xl font-bold text-center mb-6
+          text-blue-700 dark:text-blue-400"
+        >
+          Welcome Back
         </h2>
 
         <form
@@ -62,30 +79,34 @@ const Login = () => {
           className="flex flex-col gap-4"
         >
           {/* Username */}
-          <Input
-            type="text"
-            placeholder="Enter Username"
-            autoComplete="username"
-            {...register("username")}
-          />
-          {errors.username && (
-            <p className="text-red-500 text-sm">
-              {errors.username.message}
-            </p>
-          )}
+          <div>
+            <Input
+              type="text"
+              placeholder="Enter Username"
+              autoComplete="username"
+              {...register("username")}
+            />
+            {errors.username && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.username.message}
+              </p>
+            )}
+          </div>
 
           {/* Password */}
-          <Input
-            type="password"
-            placeholder="Enter Password"
-            autoComplete="current-password"
-            {...register("password")}
-          />
-          {errors.password && (
-            <p className="text-red-500 text-sm">
-              {errors.password.message}
-            </p>
-          )}
+          <div>
+            <Input
+              type="password"
+              placeholder="Enter Password"
+              autoComplete="current-password"
+              {...register("password")}
+            />
+            {errors.password && (
+              <p className="mt-1 text-sm text-red-500">
+                {errors.password.message}
+              </p>
+            )}
+          </div>
 
           <Button
             title={isSubmitting || isLoading ? "Logging in..." : "Login"}
@@ -95,14 +116,17 @@ const Login = () => {
           />
         </form>
 
-        <p className="text-center text-sm mt-4">
+        <p className="text-center text-sm mt-6
+          text-gray-600 dark:text-gray-400"
+        >
           New here?{" "}
-          <a
-            href="/signup"
-            className="text-blue-600 underline hover:text-blue-800"
+          <Link
+            to="/signup"
+            className="font-medium text-blue-600 dark:text-blue-400
+              hover:underline"
           >
-            Signup
-          </a>
+            Create an account
+          </Link>
         </p>
       </div>
     </div>

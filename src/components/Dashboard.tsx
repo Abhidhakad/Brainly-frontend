@@ -1,31 +1,48 @@
-import Sidebar from "./Sidebar";
-import TopHeader from "./TopHeader";
+import { useEffect } from "react";
+import toast from "react-hot-toast";
 import Cards from "./Cards";
+import { useContentStore } from "../store/useContentStore";
 
 const Dashboard = () => {
-  return (
-    <div className="min-h-screen bg-bg text-text transition-colors duration-300 overflow-x-hidden">
+  const fetchContent = useContentStore((state) => state.fetchContent);
+  const isLoading = useContentStore((state) => state.isLoading);
+  const contents = useContentStore((state) => state.contents);
 
-      {/* Sidebar */}
-      <Sidebar />
+  useEffect(() => {
+    if (contents.length > 0) return;
 
-      {/* Main Content Area */}
-      <div className="md:pl-64 flex flex-col min-h-screen">
-        <TopHeader />
+    fetchContent().catch((error) =>
+      toast.error(
+        error instanceof Error ? error.message : "Failed to load content",
+        { position: "top-center" }
+      )
+    );
+  }, [fetchContent, contents.length]);
 
-        <main className="mx-auto px-8 sm:py-6 pt-28">
-          <div className="
-  flex flex-wrap
-  gap-6
-  justify-center md:justify-start
-  max-w-7xl mx-auto
-">
-            <Cards />
-          </div>
-
-        </main>
+  // Loaading
+  if (isLoading) {
+    return (
+      <div className="flex justify-center py-20 text-sm opacity-70">
+        Loading content…
       </div>
+    );
+  }
 
+  // when state is empty
+  if (!isLoading && contents.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center py-24 text-center">
+        <p className="text-lg font-medium">No content yet</p>
+        <p className="text-sm opacity-60">
+          Start by adding your first note or link
+        </p>
+      </div>
+    );
+  }
+  
+  return (
+    <div className="max-w-7xl mx-auto">
+      <Cards />
     </div>
   );
 };

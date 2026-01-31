@@ -1,45 +1,25 @@
 import Card from "./Card";
-
-const cardData = [
-  {
-    title: "Project Plan",
-    tags: ["planning", "project"],
-    addedDate: "2024-06-01",
-    type: "note",
-  },
-  {
-    title: "Meeting Notes",
-    tags: ["meeting", "notes"],
-    addedDate: "2024-05-28",
-    type: "note",
-  },
-  {
-    title: "Design Mockup",
-    tags: ["design", "uiux"],
-    addedDate: "2024-05-30",
-    type: "note",
-  },
-  {
-    title: "Research Summary",
-    tags: ["research", "summary"],
-    addedDate: "2024-06-02",
-    type: "twitter",
-  }
-  
-];
+import { useContentStore } from "../store/useContentStore";
+import { formatDate } from "../utils/dateFormat";
 
 const Cards = () => {
+  const cardData = useContentStore((state) => state.contents);
+
   return (
-    <>
-      {cardData.map((card, index) => (
+    <div className="grid gap-6 [grid-template-columns:repeat(auto-fit,minmax(280px,1fr))]">
+      {cardData.map((card) => (
         <Card
-          key={index}
+          key={card._id}
+          _id={card._id}
+          type={card.type}
+          link={card.link}
           title={card.title}
           tags={card.tags}
-          addedDate={card.addedDate}
+          addedDate={formatDate(card.createdAt)}
+          descrption={card.description}
         />
       ))}
-    </>
+    </div>
   );
 };
 

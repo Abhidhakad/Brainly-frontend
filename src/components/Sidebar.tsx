@@ -11,12 +11,12 @@ import { CircleX, Menu } from "lucide-react"
 const Sidebar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
-  // const SidebarOptions = ["Twitter","Videos","Documents","Links","Tags"]
+
   return (
-    <div className="h-full fixed top-0 dark:bg-sidebar-50 z-30">
+    <div className="mx-auto h-full fixed top-0 dark:bg-sidebar-50 z-30">
       <div>
         <button
-          className="md:hidden [@media(min-width:400px)_and_(max-width:645px)]:mt-4 sm:mt-4 fixed top-2 left-4 z-70 p-1 rounded-md shadow-md
+          className="md:hidden mt-2 [@media(min-width:400px)_and_(max-width:800px)]:mt-4 fixed top-2 left-4 z-70 p-1 rounded-md shadow-md
                    transition-colors duration-300 cursor-pointer bg-secondary-500 dark:bg-gray-800"
           onClick={() => setIsOpen(!isOpen)}
         >
@@ -25,11 +25,7 @@ const Sidebar = () => {
 
         {isOpen && (
           <div
-            className="
-      fixed inset-0 z-30 md:hidden
-      bg-black/20 backdrop-blur-sm
-      transition-opacity
-    "
+            className="fixed inset-0 z-30 md:hidden bg-black/20 backdrop-blur-sm transition-opacity"
             onClick={() => setIsOpen(false)}
           />
         )}

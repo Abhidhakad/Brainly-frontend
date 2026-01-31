@@ -1,49 +1,49 @@
 
-import { useState } from "react";
-import { ContentSchema } from "../schemas/contentSchema";
-import type { ContentFormData } from "../schemas/contentSchema";
+// import { useState } from "react";
+// import { ContentSchema } from "../schemas/contentSchema";
+// import type { ContentFormData } from "../schemas/contentSchema";
 
-export const useContentForm = () => {
-    const [formData, setFormData] = useState<ContentFormData>({
-        title: "",
-        link: "",
-        description: "",
-        tags: [],
-    });
+// export const useContentForm = () => {
+//     const [formData, setFormData] = useState<ContentFormData>({
+//         title: "",
+//         link: "",
+//         description: "",
+//         tags: [],
+//     });
 
-    const [errors, setErrors] = useState<Record<string, string>>({});
-    const [isDisabled,] = useState(true);
+//     const [errors, setErrors] = useState<Record<string, string>>({});
+//     const [isDisabled,] = useState(true);
 
-    const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        try {
-            const result = ContentSchema.safeParse(formData);
-            console.log(result.success);
-            // setIsDisabled(!result.success);
-            if (!result.success) {
-                const errorMap: Record<string, string> = {};
-                result.error.errors.forEach((e) => {
-                    errorMap[e.path[0] as string] = e.message;
-                });
-                setErrors(errorMap);
-            } else {
-                setErrors({});
-            }
+//     const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+//         e.preventDefault();
+//         try {
+//             const result = ContentSchema.safeParse(formData);
+//             console.log(result.success);
+//             // setIsDisabled(!result.success);
+//             if (!result.success) {
+//                 const errorMap: Record<string, string> = {};
+//                 result.error.errors.forEach((e) => {
+//                     errorMap[e.path[0] as string] = e.message;
+//                 });
+//                 setErrors(errorMap);
+//             } else {
+//                 setErrors({});
+//             }
 
-        } catch (error) {
-            console.log(error);
-        }
+//         } catch (error) {
+//             console.log(error);
+//         }
 
-    }
+//     }
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
-    };
+//     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+//         const { name, value } = e.target;
+//         setFormData((prev) => ({
+//             ...prev,
+//             [name]: value,
+//         }));
+//     };
 
 
-    return { formData, handleChange, errors, isDisabled,handleFormSubmit};
-};
+//     return { formData, handleChange, errors, isDisabled,handleFormSubmit};
+// };

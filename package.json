@@ -21,6 +21,7 @@
     "react-hot-toast": "^2.5.2",
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.12.0",
+    "react-social-media-embed": "^2.5.18",
     "tailwindcss": "^4.1.10",
     "zod": "^3.25.64",
     "zustand": "^5.0.10"

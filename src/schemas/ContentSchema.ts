@@ -1,4 +1,3 @@
-// schemas/ContentSchema.ts
 import { z } from "zod";
 
 export const ContentSchema = z.object({
