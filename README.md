@@ -30,15 +30,8 @@ Designed for speed, clarity, and simplicity, Second Brain allows you to save con
 ### State Management
 - Zustand
 
-### Backend
-- Node.js
-- Express.js
 
-### Database
-- MongoDB
 
-### Authentication
-- JWT (JSON Web Tokens)
 
 ---
 
@@ -49,7 +42,7 @@ Designed for speed, clarity, and simplicity, Second Brain allows you to save con
 Make sure you have the following installed:
 - Node.js (v18 or higher)
 - npm or yarn
-- MongoDB (local or cloud)
+
 
 ---
 
@@ -59,16 +52,25 @@ Make sure you have the following installed:
 ```bash
 git clone https://github.com/Abhidhakad/Brainly-frontend.git
 cd second-brain
-2. Install Dependencies
+### 2. Install Dependencies
+
+In your terminal, run the following command to install all necessary packages for both the frontend and backend:
+
+```bash
+# Install for the entire project
 npm install
-3. Environment Variables
-Create a .env file in the root directory and add:
+### 3. Environment Configuration
 
-PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_secret_key
-4. Run the Project
+Create a file named `.env` in the root directory of the project and add the following variables. Replace the placeholder values with your actual credentials:
+
+```env
+VITE_API_URL=your_backend_url
+
+
+### 4. Run the Application
+
+Once the dependencies are installed and your `.env` is configured, start the development server:
+
+```bash
+# Start the development server
 npm run dev
-The application will start at:
-
-http://localhost:3000
