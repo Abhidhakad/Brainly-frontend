@@ -52,6 +52,7 @@ Make sure you have the following installed:
 ```bash
 git clone https://github.com/Abhidhakad/Brainly-frontend.git
 cd second-brain
+```
 ### 2. Install Dependencies
 
 In your terminal, run the following command to install all necessary packages for both the frontend and backend:
@@ -59,12 +60,15 @@ In your terminal, run the following command to install all necessary packages fo
 ```bash
 # Install for the entire project
 npm install
+```
+
 ### 3. Environment Configuration
 
 Create a file named `.env` in the root directory of the project and add the following variables. Replace the placeholder values with your actual credentials:
 
 ```env
 VITE_API_URL=your_backend_url
+```
 
 
 ### 4. Run the Application
@@ -74,3 +78,4 @@ Once the dependencies are installed and your `.env` is configured, start the dev
 ```bash
 # Start the development server
 npm run dev
+```
